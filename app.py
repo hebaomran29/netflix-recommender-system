@@ -230,7 +230,8 @@ def recommend_movies_w2v(movie_title, df, X_embed, top_n=10):
 def get_movie_poster(movie_title):
     """Fetch movie poster from TMDB API"""
     try:
-        api_key = "91b63d68cc6bed2e23dec869267c81e8"  # Replace with your TMDB API key
+        api_key = st.secrets["TMDB_API_KEY"]
+        # api_key = "91b63d68cc6bed2e23dec869267c81e8"  # Replace with your TMDB API key
         search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_title}"
         response = requests.get(search_url, timeout=3)
         data = response.json()
