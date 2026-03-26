@@ -175,19 +175,70 @@ st.markdown("""
 # ============================================
 # 💾 LOAD MODELS AND DATA
 # ============================================
+# @st.cache_resource
+# def load_models():
+#     """Load trained models from files"""
+#     try:
+#        from gensim.models import Word2Vec
+#        w2v_model = Word2Vec.load('models/w2v_model.model')
+#        with open('models/X_embed.pkl', 'rb') as f:
+#             X_embed = pickle.load(f)
+#        with open('models/df_processed.pkl', 'rb') as f:
+#             df = pickle.load(f)
+#        return w2v_model, X_embed, df
+#     except FileNotFoundError:
+#         st.error("❌ Model files not found! Please ensure models are saved in 'models/' folder")
+#         return None, None, None
+
 @st.cache_resource
 def load_models():
-    """Load trained models from files"""
+    """Load trained models from files - مع حل مشكلة numpy compatibility"""
+    import numpy as np
+    from gensim.models import Word2Vec
+    
     try:
-       from gensim.models import Word2Vec
-       w2v_model = Word2Vec.load('models/w2v_model.model')
-       with open('models/X_embed.pkl', 'rb') as f:
+        # ✅ حاول حمل الموديل
+        w2v_model = Word2Vec.load('models/w2v_model.model')
+        
+        # ✅ إصلاح مشكلة BitGenerator: أعد تهيئة الـ random state
+        # ده بيمنع الأخطاء لما تكون نسخ numpy مختلفة
+        w2v_model.random = np.random.default_rng(42)
+        
+        # ✅ حمل باقي الملفات
+        with open('models/X_embed.pkl', 'rb') as f:
             X_embed = pickle.load(f)
-       with open('models/df_processed.pkl', 'rb') as f:
+        with open('models/df_processed.pkl', 'rb') as f:
             df = pickle.load(f)
-       return w2v_model, X_embed, df
-    except FileNotFoundError:
-        st.error("❌ Model files not found! Please ensure models are saved in 'models/' folder")
+        
+        return w2v_model, X_embed, df
+    
+    except ValueError as e:
+        if "BitGenerator" in str(e) or "MT19937" in str(e):
+            st.warning("⚠️ Detected numpy version mismatch. Attempting to fix...")
+            try:
+                # ✅ محاولة ثانية مع إصلاح الـ random state
+                w2v_model = Word2Vec.load('models/w2v_model.model')
+                w2v_model.random = np.random.default_rng(42)  # إعادة تهيئة
+                
+                with open('models/X_embed.pkl', 'rb') as f:
+                    X_embed = pickle.load(f)
+                with open('models/df_processed.pkl', 'rb') as f:
+                    df = pickle.load(f)
+                
+                st.success("✅ Model loaded with compatibility fix!")
+                return w2v_model, X_embed, df
+            except Exception as e2:
+                st.error(f"❌ Failed to load model even with fix: {e2}")
+                return None, None, None
+        else:
+            st.error(f"❌ ValueError: {e}")
+            return None, None, None
+    
+    except FileNotFoundError as e:
+        st.error(f"❌ Model file not found: {e}")
+        return None, None, None
+    except Exception as e:
+        st.error(f"❌ Unexpected error: {type(e).__name__}: {e}")
         return None, None, None
 
 # ============================================
