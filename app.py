@@ -179,8 +179,8 @@ st.markdown("""
 def load_models():
     """Load trained models from files"""
     try:
-        with open('models/w2v_model.pkl', 'rb') as f:
-            w2v_model = pickle.load(f)
+       from gensim.models import Word2Vec
+       w2v_model = Word2Vec.load('models/w2v_model.model')
         with open('models/X_embed.pkl', 'rb') as f:
             X_embed = pickle.load(f)
         with open('models/df_processed.pkl', 'rb') as f:
