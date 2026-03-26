@@ -4,3 +4,5 @@ numpy>=1.26.0
 scikit-learn
 requests
 pillow
+gensim
+pickle-mixin
