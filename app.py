@@ -291,9 +291,9 @@ def get_movie_poster(movie_title):
             poster_path = data['results'][0].get('poster_path')
             if poster_path:
                 return f"https://image.tmdb.org/t/p/w500{poster_path}"
-        return "https://image.tmdb.org/t/p/w500_and_h282_face_filter(blur)/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg"
+        return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
     except:
-        return "https://image.tmdb.org/t/p/w500_and_h282_face_filter(blur)/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg"
+        return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
 
 # ============================================
 # 🎬 DISPLAY MOVIE CARD
