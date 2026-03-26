@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
-from gensim.models import Word2Vec
+# from gensim.models import Word2Vec
 import requests
 from PIL import Image
 import os
