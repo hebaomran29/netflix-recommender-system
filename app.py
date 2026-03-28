@@ -277,24 +277,41 @@ def recommend_movies_w2v(movie_title, df, X_embed, top_n=10):
 # ============================================
 # 🖼️ GET MOVIE POSTER (TMDB API)
 # ============================================
-@st.cache_data(show_spinner=False) 
-def get_movie_poster(movie_title):
-    """Fetch movie poster from TMDB API"""
-    try:
-        api_key = st.secrets["TMDB_API_KEY"]
-        # api_key = "91b63d68cc6bed2e23dec869267c81e8"  # Replace with your TMDB API key
-        search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_title}"
-        response = requests.get(search_url, timeout=3)
-        data = response.json()
+# @st.cache_data(show_spinner=False) 
+# def get_movie_poster(movie_title):
+#     """Fetch movie poster from TMDB API"""
+#     try:
+#         api_key = st.secrets["TMDB_API_KEY"]
+#         # api_key = "91b63d68cc6bed2e23dec869267c81e8"  # Replace with your TMDB API key
+#         search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_title}"
+#         response = requests.get(search_url, timeout=3)
+#         data = response.json()
         
-        if data['results']:
-            poster_path = data['results'][0].get('poster_path')
-            if poster_path:
-                return f"https://image.tmdb.org/t/p/w500{poster_path}"
-        return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-    except:
+#         if data['results']:
+#             poster_path = data['results'][0].get('poster_path')
+#             if poster_path:
+#                 return f"https://image.tmdb.org/t/p/w500{poster_path}"
+#         return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+#     except:
+#         return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+@st.cache_data(show_spinner=False)
+def get_movie_poster(movie_title):
+    try:
+        # api_key = "4e688970"
+         api_key = st.secrets["TMDB_API_KEY"]
+        url = f"http://www.omdbapi.com/?s={movie_title}&apikey={api_key}"
+        response = requests.get(url, timeout=3)
+        data = response.json()
+
+        if data["Response"] == "True":
+            poster = data["Search"][0]["Poster"]
+            if poster != "N/A":
+                return poster
+
         return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
 
+    except:
+        return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
 # ============================================
 # 🎬 DISPLAY MOVIE CARD
 # ============================================
