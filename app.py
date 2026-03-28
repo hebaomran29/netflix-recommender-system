@@ -297,8 +297,7 @@ def recommend_movies_w2v(movie_title, df, X_embed, top_n=10):
 @st.cache_data(show_spinner=False)
 def get_movie_poster(movie_title):
     try:
-        # api_key = "4e688970"
-         api_key = st.secrets["TMDB_API_KEY"]
+        api_key = "4e688970"
         url = f"http://www.omdbapi.com/?s={movie_title}&apikey={api_key}"
         response = requests.get(url, timeout=3)
         data = response.json()
