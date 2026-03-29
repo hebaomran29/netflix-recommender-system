@@ -187,7 +187,7 @@ st.markdown("""
 #             df = pickle.load(f)
 #        return w2v_model, X_embed, df
 #     except FileNotFoundError:
-#         st.error("❌ Model files not found! Please ensure models are saved in 'models/' folder")
+#         st.error(" Model files not found! Please ensure models are saved in 'models/' folder")
 #         return None, None, None
 
 @st.cache_resource
@@ -197,14 +197,10 @@ def load_models():
     from gensim.models import Word2Vec
     
     try:
-        # ✅ حاول حمل الموديل
         w2v_model = Word2Vec.load('models/w2v_model.model')
         
-        # ✅ إصلاح مشكلة BitGenerator: أعد تهيئة الـ random state
-        # ده بيمنع الأخطاء لما تكون نسخ numpy مختلفة
         w2v_model.random = np.random.default_rng(42)
         
-        # ✅ حمل باقي الملفات
         with open('models/X_embed.pkl', 'rb') as f:
             X_embed = pickle.load(f)
         with open('models/df_processed.pkl', 'rb') as f:
@@ -216,33 +212,32 @@ def load_models():
         if "BitGenerator" in str(e) or "MT19937" in str(e):
             st.warning("⚠️ Detected numpy version mismatch. Attempting to fix...")
             try:
-                # ✅ محاولة ثانية مع إصلاح الـ random state
                 w2v_model = Word2Vec.load('models/w2v_model.model')
-                w2v_model.random = np.random.default_rng(42)  # إعادة تهيئة
+                w2v_model.random = np.random.default_rng(42) 
                 
                 with open('models/X_embed.pkl', 'rb') as f:
                     X_embed = pickle.load(f)
                 with open('models/df_processed.pkl', 'rb') as f:
                     df = pickle.load(f)
                 
-                st.success("✅ Model loaded with compatibility fix!")
+                st.success("Model loaded with compatibility fix!")
                 return w2v_model, X_embed, df
             except Exception as e2:
-                st.error(f"❌ Failed to load model even with fix: {e2}")
+                st.error(f" Failed to load model even with fix: {e2}")
                 return None, None, None
         else:
-            st.error(f"❌ ValueError: {e}")
+            st.error(f" ValueError: {e}")
             return None, None, None
     
     except FileNotFoundError as e:
-        st.error(f"❌ Model file not found: {e}")
+        st.error(f"Model file not found: {e}")
         return None, None, None
     except Exception as e:
-        st.error(f"❌ Unexpected error: {type(e).__name__}: {e}")
+        st.error(f" Unexpected error: {type(e).__name__}: {e}")
         return None, None, None
 
 # ============================================
-# 🎬 RECOMMENDATION FUNCTION
+#  RECOMMENDATION FUNCTION
 # ============================================
 def recommend_movies_w2v(movie_title, df, X_embed, top_n=10):
     """Get movie recommendations based on Word2Vec embeddings"""
@@ -275,14 +270,13 @@ def recommend_movies_w2v(movie_title, df, X_embed, top_n=10):
     return top_movies, None
 
 # ============================================
-# 🖼️ GET MOVIE POSTER (TMDB API)
+#  GET MOVIE POSTER (TMDB API)
 # ============================================
 # @st.cache_data(show_spinner=False) 
 # def get_movie_poster(movie_title):
 #     """Fetch movie poster from TMDB API"""
 #     try:
 #         api_key = st.secrets["TMDB_API_KEY"]
-#         # api_key = "91b63d68cc6bed2e23dec869267c81e8"  # Replace with your TMDB API key
 #         search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_title}"
 #         response = requests.get(search_url, timeout=3)
 #         data = response.json()
@@ -312,7 +306,7 @@ def get_movie_poster(movie_title):
     except:
         return "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
 # ============================================
-# 🎬 DISPLAY MOVIE CARD
+#  DISPLAY MOVIE CARD
 # ============================================
 def display_movie_card(movie_row, is_selected=False, similarity=None):
     """Display a movie card with poster and info"""
@@ -362,17 +356,16 @@ def main():
     # Header
     st.markdown("<div class='main-header' style='font-size:50px;'>🎬 Netflix Recommender</div>", unsafe_allow_html=True)               
         
-    # ✅ Load models
+    #  Load models
     with st.spinner('🔄 Loading models...'):
         w2v_model, X_embed, df = load_models()
 
     if df is None:
         st.stop()
 
-    # إزالة التكرار
     df = df.drop_duplicates(subset=['title']).reset_index(drop=True)
 
-    # 🔍 Search in center
+    #  Search in center
     st.markdown("<br>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([3,4,3])
@@ -399,7 +392,7 @@ def main():
             recommendations, error = recommend_movies_w2v(movie_to_search, df, X_embed, top_n)
             
             if error:
-                st.error(f"❌ {error}")
+                st.error(f" {error}")
             else:
                 # Get selected movie info
                 selected_movie_data = df[df['title'] == movie_to_search].iloc[0]
