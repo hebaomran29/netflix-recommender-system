@@ -5,6 +5,11 @@ The system suggests similar movies based on content such as genres and descripti
 
 ---
 
+##🎬 App Preview
+<img width="1902" height="867" alt="ui" src="https://github.com/user-attachments/assets/433d0592-ddb8-46ba-a214-154f725cdadc" />
+
+---
+
 ## 🚀 Features
 
 - 🔍 Search for any movie
@@ -73,3 +78,6 @@ The system suggests similar movies based on content such as genres and descripti
 - Use advanced models like BERT
 - Improve recommendation diversity
 - Deploy full web application
+
+---
+🚀 **Live Demo:** [Click here to try the app](https://netflix-recommender-system29.streamlit.app/)
