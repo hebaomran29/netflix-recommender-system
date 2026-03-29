@@ -6,7 +6,7 @@ The system suggests similar movies based on content such as genres and descripti
 ---
 
 ## 🎬 App Preview
-<img width="1902" height="867" alt="ui" src="https://github.com/user-attachments/assets/433d0592-ddb8-46ba-a214-154f725cdadc" />
+<img width="1913" height="907" alt="ui" src="https://github.com/user-attachments/assets/ff32249c-28de-4002-9f4e-2d4ca5b532b5" />
 
 ---
 
